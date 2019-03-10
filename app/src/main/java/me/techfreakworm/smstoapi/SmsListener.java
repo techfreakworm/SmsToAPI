@@ -66,17 +66,11 @@ public class SmsListener extends BroadcastReceiver {
         StringRequest stringRequest;
 
         mRequestQueue = Volley.newRequestQueue(context);
-        stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("Success:", response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
-            }
-        });
+        stringRequest = new StringRequest(Request.Method.GET, url,
+                response ->
+                        Log.d("Success:", response),
+                error ->
+                        Log.d("error", error.toString()));
 
         mRequestQueue.add(stringRequest);
     }
