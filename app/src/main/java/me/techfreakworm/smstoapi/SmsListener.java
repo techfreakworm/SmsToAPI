@@ -1,5 +1,6 @@
 package me.techfreakworm.smstoapi;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 
@@ -25,9 +28,11 @@ public class SmsListener extends BroadcastReceiver {
     private RequestQueue mRequestQueue;
     private StringRequest stringRequest;
     private SharedPreferences preferences;
+    private static Activity mainActivity;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
 
 
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
@@ -53,7 +58,8 @@ public class SmsListener extends BroadcastReceiver {
                         jsonBody.put("Time", LocalDateTime.now().toString());
 
 
-                        sendPostRequest("http://192.168.43.96:1000/trade/v0.1/stocktip", jsonBody, context);
+                        sendPostRequest("https://api.techfreakworm.me/trade/v0.1/stocktip", jsonBody, context);
+
                     }
 
                     Log.d("Message", msg_from + ":" + msgBody);
@@ -69,8 +75,12 @@ public class SmsListener extends BroadcastReceiver {
 
         mRequestQueue = Volley.newRequestQueue(context);
         stringRequest = new StringRequest(Request.Method.POST, url,
-                response ->
-                        Log.d("Success:", response),
+                (response) ->
+                {
+                    Log.d("Success:", response);
+                    TextView view = (TextView)mainActivity.findViewById(R.id.sms_text);
+                    view.setText(view.getText()+"\n"+response);
+                },
                 error ->
                         Log.d("error", error.toString())){
 
@@ -87,5 +97,9 @@ public class SmsListener extends BroadcastReceiver {
         };
 
         mRequestQueue.add(stringRequest);
+    }
+
+    public static void setContext(Activity activity){
+        mainActivity = activity;
     }
 }

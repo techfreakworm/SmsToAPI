@@ -15,26 +15,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/sms_sender_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="SMS Sender" />
-
-        <Button
-            android:id="@+id/get_sms_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get Latest Message" />
-
         <TextView
             android:id="@+id/sms_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dummy Text" />
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

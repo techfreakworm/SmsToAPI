@@ -1,6 +1,7 @@
 package me.techfreakworm.smstoapi;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+   // final TextView textView = findViewById(R.id.sms_text);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,24 +33,10 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.RECEIVE_SMS}, 2);
         }
 
+       SmsListener.setContext(this);
+//        final SMSManagerPlug smsManagerPlug = SMSManagerPlug.getInstance();
 
-        final SMSManagerPlug smsManagerPlug = SMSManagerPlug.getInstance();
 
-        final TextView textView = findViewById(R.id.sms_text);
-
-        final EditText textEdit = findViewById(R.id.sms_sender_name);
-
-        final Button getSMSButton = findViewById(R.id.get_sms_button);
-        getSMSButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String sender = textEdit.getText().toString();
-                textView.setText(smsManagerPlug.getSMSFromSender(sender, v));
-
-//                    CallAPI sendSmsAPI = new CallAPI();
-//                    sendSmsAPI.doInBackground("http://192.168.1.4:1000/trade/v0.1/stocktip","Hello");
-            }
-        });
     }
 
 
