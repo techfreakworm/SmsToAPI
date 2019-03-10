@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 
 public class SmsListener extends BroadcastReceiver {
 
+    private RequestQueue mRequestQueue;
+    private StringRequest stringRequest;
     private SharedPreferences preferences;
 
     @Override
@@ -43,17 +46,17 @@ public class SmsListener extends BroadcastReceiver {
                         msgBody = msgs[i].getMessageBody();
                     }
 
-                    if (msg_from.equals("Mayank")) {
+                    if (msg_from.equals("BTSTRIND")) {
 
                         JSONObject jsonBody = new JSONObject();
                         jsonBody.put("Body", msgBody);
                         jsonBody.put("Time", LocalDateTime.now().toString());
 
 
-                        sendPostRequest("http://192.168.1.4:1000/trade/v0.1/stocktip", jsonBody, context);
+                        sendPostRequest("http://192.168.43.96:1000/trade/v0.1/stocktip", jsonBody, context);
                     }
 
-                    Log.d("Message", new String(msg_from + ":" + msgBody));
+                    Log.d("Message", msg_from + ":" + msgBody);
                 } catch (Exception e) {
 //                            Log.d("Exception caught",e.getMessage());
                 }
@@ -62,15 +65,26 @@ public class SmsListener extends BroadcastReceiver {
     }
 
     public void sendPostRequest(String url, JSONObject data, Context context) {
-        RequestQueue mRequestQueue;
-        StringRequest stringRequest;
+
 
         mRequestQueue = Volley.newRequestQueue(context);
-        stringRequest = new StringRequest(Request.Method.GET, url,
+        stringRequest = new StringRequest(Request.Method.POST, url,
                 response ->
                         Log.d("Success:", response),
                 error ->
-                        Log.d("error", error.toString()));
+                        Log.d("error", error.toString())){
+
+                @Override
+                public byte[] getBody() {
+                return data.toString().getBytes();
+            }
+
+                @Override
+                public String getBodyContentType() {
+                return "application/json";
+            }
+
+        };
 
         mRequestQueue.add(stringRequest);
     }
